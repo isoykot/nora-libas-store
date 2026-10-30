@@ -1,0 +1,12 @@
+name = "nora-libas-store"
+main = "src/index.js"
+compatibility_date = "2026-10-30"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nora-libas-db"
+database_id = "d762c524-39d7-400e-9b37-47f0171d8155"
