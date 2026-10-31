@@ -1,0 +1,7 @@
+-- Nora Libas additive migration. Safe to run repeatedly; preserves existing products and users.
+CREATE TABLE IF NOT EXISTS orders (id TEXT PRIMARY KEY, product_id TEXT, product_name TEXT NOT NULL, color TEXT NOT NULL DEFAULT '', size TEXT NOT NULL DEFAULT '', quantity INTEGER NOT NULL, unit_price INTEGER NOT NULL, delivery_fee INTEGER NOT NULL, total INTEGER NOT NULL, customer_name TEXT NOT NULL, customer_phone TEXT NOT NULL, delivery_area TEXT NOT NULL, address TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'new', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(created_at);
+CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
+CREATE TABLE IF NOT EXISTS staff_requests (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL, salt TEXT NOT NULL, requested_by TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS site_settings (key TEXT PRIMARY KEY, value TEXT NOT NULL DEFAULT '');
+INSERT OR IGNORE INTO site_settings(key,value) VALUES ('store_name','Nora Libas'),('tagline','YOUR STYLE, OUR PASSION'),('announcement','সারা বাংলাদেশে Cash on Delivery'),('hero_title','Elegance in Every Thread'),('hero_text','আপনার পছন্দের পোশাক, এখন আরও সহজে অর্ডার করুন।'),('whatsapp',''),('dhaka_delivery','120'),('outside_delivery','150');
