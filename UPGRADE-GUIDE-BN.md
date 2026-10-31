@@ -17,7 +17,7 @@
 
 - Owner username: `superuser`
 - Existing store হলে migration-এর আগে যে Owner password ছিল সেটি দিয়ে প্রথমবার login করুন।
-- প্রথম login-এ Owner-কে নতুন কমপক্ষে ১২ অক্ষরের password সেট করতেই হবে। এই one-time password change-এর পর এই screen দিয়ে আর পরিবর্তন করা যাবে না।
+- প্রথম login-এ Owner-কে নতুন কমপক্ষে ১২ অক্ষরের password সেট করতেই হবে। পরবর্তীতেও নিজের password শুধু Owner এই screen থেকে পরিবর্তন করতে পারবেন।
 - Fresh installation হলে প্রথম Owner Setup-এ username অবশ্যই `superuser` দিন এবং নিজের শক্তিশালী password বেছে নিন। Public/default password `superuser` ব্যবহার করবেন না।
 
 Owner ছাড়া কেউ Admin account তৈরি করতে পারবে না। Admin কেবল Staff approval request পাঠাতে পারবে। Owner User ID ও Role দেখতে, username পরিবর্তন করতে, অন্য account-এর password reset করতে এবং non-owner account delete করতে পারবে।
