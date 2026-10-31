@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#702b49"><meta name="robots" content="index,follow">
+<title>Shopping Cart | Nora Libas</title>
+<style>
+:root{--wine:#702b49;--line:#f0e5e9;--soft:#fff7f8;--ink:#30252a;--muted:#80747a}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:14px system-ui,"Noto Sans Bengali",sans-serif}
+.top{background:var(--wine);color:white;text-align:center;padding:8px;font-size:12px}
+.nav{height:62px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.logo{font:700 24px Georgia;color:var(--wine);text-decoration:none}.btn{border:0;border-radius:24px;background:var(--wine);color:#fff;text-decoration:none;padding:11px 17px;min-height:42px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:wait}.btn.light{background:#f7eaf0;color:var(--wine)}
+.wrap{max-width:900px;margin:auto;padding:18px 14px 32px}.title{font:700 29px Georgia;color:var(--wine);margin:7px 0 4px}.muted{color:var(--muted);font-size:12px;line-height:1.6}
+.layout{display:grid;gap:16px;margin-top:18px}.items,.checkout{border:1px solid var(--line);border-radius:15px;background:white;padding:14px}
+.cart-item{display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:11px;padding:12px 0;border-bottom:1px solid var(--line);align-items:center}
+.cart-item:last-child{border-bottom:0}.cart-item img{width:88px;height:104px;border-radius:9px;object-fit:cover;background:var(--soft)}
+.item-name{font-weight:800;color:var(--wine);margin-bottom:4px}.item-meta{font-size:12px;color:var(--muted);line-height:1.55}
+.item-price{font-weight:800;color:var(--wine);margin-top:5px}
+.qty{display:flex;align-items:center;gap:6px;margin-top:8px}.qty button{border:0;border-radius:7px;background:#f7eaf0;color:var(--wine);width:28px;height:28px;font-weight:800;font-size:17px;cursor:pointer}.qty span{min-width:18px;text-align:center;font-weight:800}
+.remove{border:0;background:none;color:#bb3448;text-decoration:underline;font-size:12px;cursor:pointer;padding:6px}
+.section-head{font-size:17px;font-weight:800;color:var(--wine);margin:0 0 12px}
+.field{margin:10px 0}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;min-height:44px;border:1px solid #e4d8dd;border-radius:9px;padding:11px;font:inherit;background:#fff}.field textarea{min-height:75px;resize:vertical}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.total-row{display:flex;justify-content:space-between;padding:8px 0;color:#665860}
+.grand{border-top:1px solid var(--line);margin-top:5px;padding-top:13px;color:var(--wine);font-weight:850;font-size:18px}
+.checkout .btn{width:100%;margin-top:10px}
+.empty{padding:32px 12px;text-align:center;color:var(--muted);line-height:1.7}
+.success{max-width:580px;margin:35px auto 10px;border:1px solid var(--line);border-radius:17px;background:#fffafb;padding:26px 18px;text-align:center}
+.check{width:56px;height:56px;border-radius:50%;background:#e9f7ee;color:#16834a;margin:0 auto 12px;display:grid;place-items:center;font-size:30px;font-weight:900}
+.success h1{font:700 27px Georgia;color:var(--wine);margin:5px 0 10px}
+.order-id{padding:12px;border:1px solid var(--line);background:#fff;border-radius:9px;margin-top:12px;overflow-wrap:anywhere}
+.footer{text-align:center;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding:24px 10px;margin-top:24px}
+@media(min-width:740px){.wrap{padding:26px 20px 40px}.layout{grid-template-columns:minmax(0,1.2fr) minmax(290px,.8fr);align-items:start}.items,.checkout{padding:18px}.cart-item{grid-template-columns:100px minmax(0,1fr) auto}.cart-item img{width:100px;height:120px}}
+@media(max-width:420px){.cart-item{grid-template-columns:72px minmax(0,1fr) auto;gap:8px}.cart-item img{width:72px;height:88px}.remove{font-size:11px}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top" id="announcement">সারা বাংলাদেশে Cash on Delivery</div>
+<header class="nav"><a class="logo" href="/">Nora Libas</a><a class="btn light" href="/#products">Continue Shopping</a></header>
+<main class="wrap">
+<h1 class="title">Shopping Cart</h1><div class="muted">আপনার পছন্দের পণ্যগুলো যাচাই করে Checkout করুন।</div>
+<div id="content"><div class="empty">Cart লোড হচ্ছে...</div></div>
+</main>
+<footer class="footer">© 2026 Nora Libas. All Rights Reserved.</footer>
+<script>
+const $=id=>document.getElementById(id),money=n=>'৳ '+Number(n||0).toLocaleString('en-BD'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const KEY='noraLibasCart';let cart=[],products=[],settings={};
+function readCart(){try{const v=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(v)?v.filter(x=>x&&typeof x.productId==='string'&&Number.isInteger(Number(x.quantity))&&Number(x.quantity)>0):[]}catch{return []}}
+function saveCart(){try{localStorage.setItem(KEY,JSON.stringify(cart))}catch{}}
+function fee(){const a=$('area');return a?.value==='inside'?Number(settings.dhaka_delivery??120):a?.value==='outside'?Number(settings.outside_delivery??150):null}
+function getRows(){return cart.map((x,i)=>({x,i,p:products.find(p=>p.id===x.productId)}))}
+function subtotal(){return getRows().reduce((n,r)=>n+(r.p?Number(r.p.offerPrice)*Number(r.x.quantity):0),0)}
+function render(){const rows=getRows(),valid=rows.length>0&&rows.every(r=>r.p&&Number(r.x.quantity)<=Number(r.p.stock));if(!rows.length){$('content').innerHTML='<div class="empty">আপনার Cart এখন খালি।<br><a class="btn" href="/#products" style="margin-top:12px">কালেকশন দেখুন</a></div>';return}
+$('content').innerHTML='<div class="layout"><section class="items"><h2 class="section-head">Your Items ('+rows.length+')</h2>'+rows.map(({x,i,p})=>p?'<article class="cart-item"><img src="'+esc(p.images?.[0]||'')+'" alt="'+esc(p.name)+'"><div><div class="item-name">'+esc(p.name)+'</div><div class="item-meta">Color: '+esc(x.color)+'<br>Size: '+esc(x.size)+'<br>'+(Number(p.stock)>0?'স্টক আছে':'স্টক নেই')+'</div><div class="item-price">'+money(p.offerPrice)+' × '+Number(x.quantity)+'</div><div class="qty"><button type="button" data-action="minus" data-index="'+i+'" aria-label="Decrease quantity">−</button><span>'+Number(x.quantity)+'</span><button type="button" data-action="plus" data-index="'+i+'" aria-label="Increase quantity">+</button></div></div><button class="remove" type="button" data-action="remove" data-index="'+i+'">Remove</button></article>':'<article class="cart-item"><div class="empty">ছবি নেই</div><div><b>এই পণ্যটি আর পাওয়া যাচ্ছে না</b><div class="item-meta">Product ID: '+esc(x.productId)+'</div></div><button class="remove" data-action="remove" data-index="'+i+'">Remove</button></article>').join('')+'</section><aside class="checkout"><h2 class="section-head">Checkout</h2><form id="checkoutForm"><div class="field"><label>আপনার নাম</label><input name="name" maxlength="120" autocomplete="name" required></div><div class="field"><label>মোবাইল নম্বর</label><input name="phone" type="tel" inputmode="numeric" pattern="01[3-9][0-9]{8}" minlength="11" maxlength="11" placeholder="01XXXXXXXXX" required autocomplete="tel"></div><div class="field"><label>Delivery Area</label><select name="area" id="area" required><option value="" selected disabled>এলাকা নির্বাচন করুন</option><option value="inside">ঢাকার মধ্যে — '+money(settings.dhaka_delivery??120)+'</option><option value="outside">ঢাকার বাইরে — '+money(settings.outside_delivery??150)+'</option></select></div><div class="field"><label>সম্পূর্ণ ঠিকানা</label><textarea name="address" required maxlength="1000" autocomplete="street-address" placeholder="থানা/উপজেলা, এলাকা, রোড ও বাড়ির নম্বর"></textarea></div><div class="total-row"><span>Subtotal</span><b id="subtotal">'+money(subtotal())+'</b></div><div class="total-row"><span>Delivery Charge</span><b id="delivery">এলাকা নির্বাচন করুন</b></div><div class="total-row grand"><span>Total</span><b id="grandTotal">—</b></div><button class="btn" id="submitOrder" type="submit" '+(valid?'':'disabled')+'>Place Order</button><p class="muted">একটি Order ID-তে সব Cart পণ্য একসঙ্গে Nora Libas-এ জমা হবে।</p></form></aside></div>';
+const form=$('checkoutForm');form.addEventListener('change',updateTotals);form.onsubmit=submitCheckout;$('content').querySelector('.items').addEventListener('click',cartAction);updateTotals()}
+function updateTotals(){const d=fee();if(!$('subtotal'))return;$('subtotal').textContent=money(subtotal());$('delivery').textContent=d===null?'এলাকা নির্বাচন করুন':money(d);$('grandTotal').textContent=d===null?'—':money(subtotal()+d)}
+function cartAction(e){const b=e.target.closest('[data-action]');if(!b)return;const i=Number(b.dataset.index),item=cart[i],p=products.find(x=>x.id===item?.productId);if(!item)return;switch(b.dataset.action){case 'remove':cart.splice(i,1);break;case 'minus':item.quantity=Math.max(1,Number(item.quantity)-1);break;case 'plus':if(!p||Number(item.quantity)>=Math.min(20,Number(p.stock))){alert('স্টকে এর বেশি নেই।');return}item.quantity++;break}saveCart();render()}
+async function submitCheckout(e){e.preventDefault();const f=$('checkoutForm');if(!f.reportValidity())return;const d=Object.fromEntries(new FormData(f).entries()),rows=getRows();if(rows.some(r=>!r.p||Number(r.x.quantity)>Number(r.p.stock))){alert('Cart-এর কোনো পণ্য এখন আর পর্যাপ্ত stock-এ নেই। Cart Refresh করুন।');return}if(!/^01[3-9][0-9]{8}$/.test(d.phone)){alert('সঠিক ১১ ডিজিটের বাংলাদেশি মোবাইল নম্বর দিন।');return}const btn=$('submitOrder');btn.disabled=true;btn.textContent='অর্ডার জমা হচ্ছে...';try{const r=await fetch('/api/checkout',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:d.name,phone:d.phone,address:d.address,area:d.area,items:rows.map(({x})=>({productId:x.productId,color:x.color,size:x.size,quantity:Number(x.quantity)}))})}),v=await r.json();if(!r.ok)throw Error(v.error||'অর্ডার নেওয়া যায়নি');localStorage.removeItem(KEY);$('content').innerHTML='<section class="success"><div class="check">✓</div><h1>Thank you for your order!</h1><p>Thank you for shopping with Nora Libas.<br>আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে।</p><div class="order-id"><div class="muted">Order ID</div><b>'+esc(v.orderId)+'</b></div><div class="total-row grand"><span>Total</span><b>'+money(v.total)+'</b></div><a class="btn" href="/">Continue Shopping</a></section>'}catch(err){alert(err.message);btn.disabled=false;btn.textContent='Place Order'}}
+async function start(){try{const [a,b]=await Promise.all([fetch('/api/products'),fetch('/api/settings')]);if(!a.ok||!b.ok)throw Error('তথ্য লোড করা যায়নি');const pd=await a.json(),sd=await b.json();products=pd.products||[];settings=sd.settings||{};if(settings.announcement)$('announcement').textContent=settings.announcement;cart=readCart();render()}catch(e){$('content').innerHTML='<div class="empty">Cart লোড করা যাচ্ছে না। কিছুক্ষণ পর আবার চেষ্টা করুন।</div>'}}
+start();
+</script>
+</body></html>
