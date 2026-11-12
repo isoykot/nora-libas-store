@@ -5,7 +5,7 @@ Keep your existing Cloudflare D1 database. Do NOT create a new database and do N
 
 FILES
 - public/index.html: customer storefront
-- public/nl-owner-panel-7x9p.html: private Owner/Admin/Staff panel
+- public/admin.html: private Owner/Admin/Staff panel
 - src/index.js: Worker API and access control
 - migration-v2.sql: initial V2 database changes (orders/settings + image path update)
 - migration-v3.sql: Owner/Admin/Staff approval workflow
@@ -39,16 +39,15 @@ ORDERS & RECEIPTS
 - Receipt includes order ID/date, customer name, phone, address, area, product, color, size, quantity, item price, delivery fee and total.
 - WhatsApp order option remains available on the storefront (set the store WhatsApp number in Owner settings).
 
-MIGRATION STEPS
-1. Backup your current GitHub repository and existing D1 database before changing anything.
-2. If migration-v2.sql has NOT been run yet, run migration-v2.sql once in the EXISTING D1 database.
-3. Run migration-v3.sql once in the SAME D1 database. It creates the Staff approval queue and promotes the first legacy Admin account to Owner.
-4. Replace the old repository files with the contents of this package and commit to the same branch connected to Cloudflare.
-5. Wait for the Cloudflare Worker deployment to show Ready.
-6. Open /nl-owner-panel-7x9p.html and sign in with the existing first account. If the old first account was created by the earlier setup flow, migration-v3 promotes it to Owner.
+MIGRATION STEPS (CURRENT VERSION)
+1. Back up the existing Cloudflare D1 database and GitHub repository.
+2. For an existing V2 database, follow UPGRADE-GUIDE-BN.md and run migrations/0005_single_owner_security.sql, then migrations/0006_cart_order_items.sql, once each in the SAME existing D1 database.
+3. Do not create a new database or run schema.sql on an existing store. schema.sql is only a fresh-install reference.
+4. Deploy the main branch through the connected Cloudflare Worker.
+5. Test /api/health, /admin.html, the storefront, product details, /cart.html, a test order, order confirmation, and receipt printing.
 
 PRIVATE PANEL URL
-https://YOUR-DOMAIN/nl-owner-panel-7x9p.html
+https://YOUR-DOMAIN/admin.html
 The storefront has no visible Admin link. The URL is unlisted, not a substitute for authentication; all private APIs still require a valid login and role permission.
 
 SECRETS
